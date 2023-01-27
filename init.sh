@@ -8,24 +8,28 @@ cd minecraft
 # Fetch latest version of Minecraft if version isn't specified.
 urlPrefix="https://papermc.io/api/v2/projects/paper"
 if [ ${MINECRAFT_VERSION} = latest ]; then
-  MINECRAFT_VERSION="$(wget -qO - ${urlPrefix} | jq -r '.versions[-1]')"
+  # MINECRAFT_VERSION="$(wget -qO - ${urlPrefix} | jq -r '.versions[-1]')"
+  echo "Error, please specify exact minecraft version by setting MINECRAFT_VERSION environment variable (select one from \"$urlPrefix\")"
+  exit 1
 
 # Check to verify that supplied version number is valid.
-elif [ $(wget -qO - ${urlPrefix} | jq ".versions | index(\"${MINECRAFT_VERSION}\")") = null ]; then
-  echo "${MINECRAFT_VERSION} is not a valid Minecraft version."
-  exit 1
+# elif [ $(wget -qO - ${urlPrefix} | jq ".versions | index(\"${MINECRAFT_VERSION}\")") = null ]; then
+#   echo "${MINECRAFT_VERSION} is not a valid Minecraft version."
+#   exit 1
 fi
 
 # Handle PaperMC Build Validation #############################################
 # Fetch latest version of PaperMC if version isn't specified.
 urlPrefix="${urlPrefix}/versions/${MINECRAFT_VERSION}"
 if [ ${PAPER_BUILD} = latest ]; then
-  PAPER_BUILD="$(wget -qO - ${urlPrefix} | jq '.builds[-1]')"
+  echo "Error, please specify exact paper version by setting PAPER_BUILD environment variable (select one from \"$urlPrefix\")"
+  exit 1
+  # PAPER_BUILD="$(wget -qO - ${urlPrefix} | jq '.builds[-1]')"
 
 # Check to verify that supplied build number is valid.
-elif [ $(wget -qO - ${urlPrefix} | jq ".builds | index(${PAPER_BUILD})") = null ]; then
-  echo "${PAPER_BUILD} is not a valid PaperMC build for Minecraft version ${MINECRAFT_VERSION}."
-  exit 1
+# elif [ $(wget -qO - ${urlPrefix} | jq ".builds | index(${PAPER_BUILD})") = null ]; then
+#   echo "${PAPER_BUILD} is not a valid PaperMC build for Minecraft version ${MINECRAFT_VERSION}."
+#   exit 1
 fi
 
 # Handle Installation & Updating ##############################################
@@ -34,7 +38,9 @@ jarFile="paper-${MINECRAFT_VERSION}-${PAPER_BUILD}.jar"
 # If it doesn't exist delete all old jar files and download specified version.
 if [ ! -e ${jarFile} ]; then
   rm -rf paper-*-*.jar
-  wget "${urlPrefix}/builds/${PAPER_BUILD}/downloads/${jarFile}"
+  url="${urlPrefix}/builds/${PAPER_BUILD}/downloads/${jarFile}"
+  echo "downloading paper from \"$url\""
+  wget "$url"
 fi
 
 # Handle eula.txt File ########################################################
