@@ -43,6 +43,13 @@ if [ ! -e ${jarFile} ]; then
   wget "$url"
 fi
 
+mojangJarFile="mojang_$MINECRAFT_VERSION.jar"
+if [ ! -e "cache/$mojangJarFile" ]; then
+  echo "please download minecraft server jar from \"https://mcversions.net/download/$MINECRAFT_VERSION\"" \
+       "and place it in \"/home/paper/minecraft/cache\" as \"$mojangJarFile\""
+  exit 1
+fi
+
 # Handle eula.txt File ########################################################
 # If the eula confirmation doesn't exist, start the server to
 # generate it and then accept the eula after the server has closed.
