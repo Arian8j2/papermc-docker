@@ -1,0 +1,19 @@
+version: "3.4"
+
+services:
+  paper:
+    container_name: paper
+    image: ghcr.io/arian8j2/papermc
+    environment:
+      - MINECRAFT_VERSION=1.19.2
+      - PAPER_BUILD=307
+      - MIN_MEMORY=3G
+      - MAX_MEMORY=4G
+      - UID=9001
+      - GID=9001
+    volumes:
+      - ./paper:/home/paper/minecraft
+    ports:
+      - 25565:25565
+    tty: true
+    stdin_open: true
